@@ -1,1 +1,1 @@
-# temperature-prototype
+# Temperature prototype
