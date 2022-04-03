@@ -15,7 +15,7 @@ void loop() {
 
   Serial.println(serial_data);
 
-  delay(10000); // For Debugging Purposes
+  delay(1000); // For Debugging Purposes
 }
 
 String build_serial_data(String measurement, String field, String value) {
@@ -24,7 +24,7 @@ String build_serial_data(String measurement, String field, String value) {
   serial_data += "{";
   serial_data +=    "\"measurement\":\"" + measurement + "\",";
   serial_data +=    "\"field\":\""       + field       + "\",";
-  serial_data +=    "\"value\":\""       + value       + "\"";
+  serial_data +=    "\"value\":"         + value;
   serial_data += "}";
 
   return serial_data;
