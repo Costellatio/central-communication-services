@@ -1,5 +1,5 @@
-#ifndef SERIAL_DATA_BUILDER_H
-#define SERIAL_DATA_BUILDER_H
+#ifndef SENSOR_SERIAL_DATA_BUILDER_H
+#define SENSOR_SERIAL_DATA_BUILDER_H
 
 #include <Arduino.h>
 #include <Vector.h>
