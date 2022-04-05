@@ -6,7 +6,7 @@ from distutils.dir_util import copy_tree, remove_tree
 load_dotenv()
 
 EXTERNAL_ARDUINO_LIBRARY_FOLDERS = [
-  'helpers',
+  'dependencies',
   'sensors',
 ]
 
