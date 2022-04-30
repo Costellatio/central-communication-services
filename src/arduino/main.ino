@@ -1,10 +1,11 @@
+//#include <Arduino.h>
+//#include <TMP_38GZ.h>
 #include <Wire.h>
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BME280.h>
 #include <SensorSerialDataBuilder.h>
 
-#define SEALEVELPRESSURE_HPA (1013.25)
-
+#define SEALEVELPRESSURE_HPA        (1013.25)
 #define WEATHER_STATION_MEASUREMENT "weather station"
 #define TEMPERATURE_FIELD           "temperature"
 
@@ -42,13 +43,11 @@ void loop() {
   // Serial.println(" %");
   
   // Serial.println();
-  // delay(2000);
-  
+
   String serial_data = "[" +
     temperature_sensor_serial_data() +
   "]";
 
   Serial.println(serial_data);
-
   delay(2000);
 }

@@ -4,7 +4,7 @@ from dotenv          import load_dotenv
 from influxdb_client import InfluxDBClient, Point
 from json            import loads
 from logging         import INFO, info, warning, basicConfig
-from grafana_client  import GrafanaApi
+#from grafana_client  import GrafanaApi
 
 basicConfig(level=INFO, format='[%(levelname)s][%(asctime)s] %(message)s')
 load_dotenv()
@@ -17,10 +17,10 @@ influx_token  = getenv('INFLUXDB_TOKEN')
 arduino_port = getenv('ARDUINO_PORT')
 arduino_rate = getenv('ARDUINO_RATE')
 
-grafana = GrafanaApi(
-  auth='GRAFANA_TOKEN',
-  host='http://localhost:3000'
-)
+# grafana = GrafanaApi(
+#   auth='GRAFANA_TOKEN',
+#   host='http://localhost:3000'
+# )
 
 try:
   influx_client = InfluxDBClient(url=influx_url, org=influx_org, token=influx_token)
@@ -33,13 +33,6 @@ try:
   serial_connection = Serial(arduino_port, arduino_rate)
 except:
   info('not able to connect to arduino serial port')
-  exit(1)
-
-try:
-  influx_client = InfluxDBClient(url=influx_url, org=influx_org, token=influx_token)
-  influx_write  = influx_client.write_api()
-except:
-  info('not able to connect to influx')
   exit(1)
 
 def run():
