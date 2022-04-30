@@ -5,7 +5,7 @@
 - docker - [link](https://docs.docker.com/get-docker/)
 - docker-compose - [link](https://docs.docker.com/compose/install/)
 - python3 - [link](https://www.python.org/downloads/)
-- ardoino-ide - [link](https://www.arduino.cc/en/software)
+- arduino-ide - [link](https://www.arduino.cc/en/software)
 - gcc - [link](https://www.mingw-w64.org/downloads/)
 
 ### Hardware Requirements
