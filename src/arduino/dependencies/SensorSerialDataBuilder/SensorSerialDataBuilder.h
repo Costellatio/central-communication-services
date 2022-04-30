@@ -2,8 +2,8 @@
 #define SENSOR_SERIAL_DATA_BUILDER_H
 
 #include <Arduino.h>
-#include <Vector.h>
 #include <Tag.h>
+#include <Vector.h>
 
 class SensorSerialDataBuilder {
   public:
