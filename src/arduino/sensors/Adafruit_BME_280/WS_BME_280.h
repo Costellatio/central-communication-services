@@ -8,11 +8,7 @@
 #define _WS_BME_280
 #include <Adafruit_BME280.h>
 
-String temperature_sensor_serial_data(Adafruit_BME280 &bme);
-String humidity_sensor_serial_data(Adafruit_BME280 &bme);
-String atm_pressure_sensor_serial_data(Adafruit_BME280 &bme);
-String altitude_sensor_serial_data(Adafruit_BME280 &bme);
-
+void assemble_data(char* buffer, Adafruit_BME280& bme);
 bool print_weather_station_data(Adafruit_BME280 bme);
 
 #endif  // _WS_BME_280

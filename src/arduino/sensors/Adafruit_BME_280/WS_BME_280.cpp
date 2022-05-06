@@ -8,34 +8,39 @@
 #include "WS_BME_280.h"
 #include <Wire.h>
 #include <SensorSerialDataBuilder.h>
+#include <common.h>
 
-#define SEALEVELPRESSURE_HPA            (1013.25)
-#define WEATHER_STATION_MEASUREMENT     "weather station"
-#define TEMPERATURE_FIELD               "temperature"
-#define HUMIDITY_FIELD                  "humidity"
-#define ATM_PRESSURE_FIELD              "atmospheric pressure"
-#define ALTITUDE_FIELD                  "altitude"
+void assemble_data(char* buffer, Adafruit_BME280& bme)
+{
+  char *temperature = send_data_double(WS_TEMPERATURE, bme.readTemperature());
+  char *humidity = send_data_double(WS_HUMIDITY, bme.readHumidity());
+  char *atm_pressure = send_data_double(WS_ATM_PRESSURE, bme.readPressure() / 100.0F);
+  char *altitute = send_data_double(WS_ALTITUDE, bme.readAltitude(SEALEVELPRESSURE_HPA));
 
-String temperature_sensor_serial_data(Adafruit_BME280 &bme) {
-  return SensorSerialDataBuilder::build(WEATHER_STATION_MEASUREMENT, TEMPERATURE_FIELD, String(bme.readTemperature()));
-}
-String humidity_sensor_serial_data(Adafruit_BME280 &bme) {
-  return SensorSerialDataBuilder::build(WEATHER_STATION_MEASUREMENT, HUMIDITY_FIELD, String(bme.readHumidity()));
-}
-String atm_pressure_sensor_serial_data(Adafruit_BME280 &bme) {
-  return SensorSerialDataBuilder::build(WEATHER_STATION_MEASUREMENT, ATM_PRESSURE_FIELD, String(bme.readPressure() / 100.0F));
-}
-String altitude_sensor_serial_data(Adafruit_BME280 &bme) {
-  return SensorSerialDataBuilder::build(WEATHER_STATION_MEASUREMENT, ALTITUDE_FIELD, String(bme.readAltitude(SEALEVELPRESSURE_HPA)));
+  strcat(buffer, "#");
+
+  strcpy(buffer, temperature);
+  strcat(buffer, "#");
+  strcat(buffer, humidity);
+  strcat(buffer, "#");
+  strcat(buffer, atm_pressure);
+  strcat(buffer, "#");
+  strcat(buffer, altitute);
+  // if you want to add more sensors use strcat()
+  
+  strcat(buffer, "#");
+
+
+  delete[] temperature;
+  delete[] humidity;
+  delete[] atm_pressure;
+  delete[] altitute;
 }
 
 bool print_weather_station_data(Adafruit_BME280 bme)
 {
-  String serial_data;
-
-  serial_data = "[" + temperature_sensor_serial_data(bme) + "," 
-                    + humidity_sensor_serial_data(bme) +
-                "]";
+  char serial_data[MAX_SIZE_WS_DATA_STORAGE];
+  assemble_data(serial_data, bme);
   Serial.println(serial_data);
   return true;
 }

@@ -2,9 +2,7 @@ from os              import getenv
 from serial          import Serial
 from dotenv          import load_dotenv
 from influxdb_client import InfluxDBClient, Point
-from json            import loads
 from logging         import INFO, info, warning, basicConfig
-#from grafana_client  import GrafanaApi
 
 basicConfig(level=INFO, format='[%(levelname)s][%(asctime)s] %(message)s')
 load_dotenv()
@@ -17,10 +15,33 @@ influx_token  = getenv('INFLUXDB_TOKEN')
 arduino_port = getenv('ARDUINO_PORT')
 arduino_rate = getenv('ARDUINO_RATE')
 
-# grafana = GrafanaApi(
-#   auth='GRAFANA_TOKEN',
-#   host='http://localhost:3000'
-# )
+def switch_get_filter(argument):
+  switcher = {
+    1: "weather station",
+    10: "temperature",
+    11: "humidity",
+    12: "atmospheric pressure",
+    13: "altitude",
+    14: "wind speed"
+  }
+  return switcher.get(argument, "INVALID ARGUMENT")
+
+def send_data(data):
+  data = data.split(",")
+  if len(data) != 2:
+    raise Exception("Expected 2 arguments from serial data, recieved: " + str(len(data)))
+
+  _measurement = int((data[0])[0])
+
+  if data[0] == "INVALID ARGUMENT":
+    raise Exception("Sensor ID is unknown!")
+  _field = int(data[0])
+  _data = float(data[1])
+
+  influx_point = Point(switch_get_filter(_measurement)).field(switch_get_filter(_field), _data)
+  influx_write.write(bucket=influx_bucket, org=influx_org, record=influx_point)
+
+  info('data written')
 
 try:
   influx_client = InfluxDBClient(url=influx_url, org=influx_org, token=influx_token)
@@ -41,20 +62,19 @@ def run():
 
   while True:
     try:
-      serial_data = loads(serial_connection.readline().decode())
+      serial_data = serial_connection.readline().decode().strip()
+      serial_data = serial_data.replace(" ", "")
+      serial_data = serial_data.split("#")
+
       for data in serial_data:
-        sensor_record = Point(data['measurement']).field(data['field'], data['value'])
+        if data:
+          send_data(data)
 
-        for tag in data['tags']:
-          sensor_record = sensor_record.tag(tag['name'], tag['value'])
-
-        influx_write.write(bucket=influx_bucket, org=influx_org, record=sensor_record)
-
-      info('data written')
     except KeyboardInterrupt:
       info('service shutting down')
       exit(0)
-    except:
+    except Exception as e:
+      warning(e)
       warning('broken data')
       continue
 

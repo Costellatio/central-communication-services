@@ -1,10 +1,10 @@
 #include <WS_BME_280.h>
 #include <arduino-timer.h>
-
-#define WS_TIME_PERIOD_SECONDS  10
+#include <common.h>
 
 Adafruit_BME280 bme;
 Timer<> ws_timer = timer_create_default();
+
 void setup() {
     Serial.begin(9600);
     while(!Serial);
