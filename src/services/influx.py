@@ -4,7 +4,9 @@ from dotenv          import load_dotenv
 from influxdb_client import InfluxDBClient, Point
 from json            import loads
 from logging         import INFO, info, warning, basicConfig
-#from grafana_client  import GrafanaApi
+import requests
+import json
+import os
 
 basicConfig(level=INFO, format='[%(levelname)s][%(asctime)s] %(message)s')
 load_dotenv()
@@ -17,10 +19,22 @@ influx_token  = getenv('INFLUXDB_TOKEN')
 arduino_port = getenv('ARDUINO_PORT')
 arduino_rate = getenv('ARDUINO_RATE')
 
-# grafana = GrafanaApi(
-#   auth='GRAFANA_TOKEN',
-#   host='http://localhost:3000'
-# )
+path_to_json = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../../data')
+
+fileStream = open(path_to_json + '/headers.json')
+headers = json.load(fileStream)
+
+fileStream = open(path_to_json + '/datasource.json')
+dataSourceData = json.load(fileStream)
+
+response = requests.post('http://localhost:3000/api/datasources', headers=headers, json=dataSourceData)
+
+fileStream = open(path_to_json + '/dashboard.json')
+dashboardData = json.load(fileStream)
+
+response = requests.post('http://localhost:3000/api/dashboards/db', headers=headers, json=dashboardData)
+
+fileStream.close()
 
 try:
   influx_client = InfluxDBClient(url=influx_url, org=influx_org, token=influx_token)
