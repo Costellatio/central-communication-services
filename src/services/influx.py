@@ -4,6 +4,7 @@ from dotenv          import load_dotenv
 from influxdb_client import InfluxDBClient, Point
 from json            import loads
 from logging         import INFO, info, warning, basicConfig
+import grafana
 
 basicConfig(level=INFO, format='[%(levelname)s][%(asctime)s] %(message)s')
 load_dotenv()
@@ -26,7 +27,7 @@ except:
 try:
   serial_connection = Serial(arduino_port, arduino_rate)
 except:
-  info('not able to connect to arduion serial port')
+  info('not able to connect to arduino serial port')
   exit(1)
 
 def run():

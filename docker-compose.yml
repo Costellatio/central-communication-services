@@ -12,3 +12,15 @@ services:
       DOCKER_INFLUXDB_INIT_ORG:         ${INFLUXDB_ORG}
       DOCKER_INFLUXDB_INIT_BUCKET:      ${INFLUXDB_BUCKET}
       DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: ${INFLUXDB_TOKEN}
+
+  grafana:
+    image: grafana/grafana:8.5.1
+    container_name: grafana
+    ports:
+      - 3000:3000
+    environment:
+      GF_DEFAULT_INSTANCE_NAME:   ${GRAFANA_NAME}
+      GF_SECURITY_ADMIN_USER:     ${GRAFANA_USERNAME}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD}
+    depends_on:
+      - influxdb
