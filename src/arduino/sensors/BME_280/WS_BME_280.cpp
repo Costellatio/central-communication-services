@@ -18,7 +18,6 @@ void assemble_data(char* buffer, Adafruit_BME280& bme)
   char *altitute = send_data_double(WS_ALTITUDE, bme.readAltitude(SEALEVELPRESSURE_HPA));
 
   strcat(buffer, "#");
-
   strcpy(buffer, temperature);
   strcat(buffer, "#");
   strcat(buffer, humidity);

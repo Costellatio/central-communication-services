@@ -22,7 +22,8 @@ def switch_get_filter(argument):
     11: "humidity",
     12: "atmospheric pressure",
     13: "altitude",
-    14: "wind speed"
+    14: "wind speed",
+    20: "rain sensor"
   }
   return switcher.get(argument, "INVALID ARGUMENT")
 

@@ -11,7 +11,6 @@ char* send_data_integer(int value_enum, int data)
     itoa(data, int_number_data, 10);
     itoa(value_enum, value_enum_data, 10);
 
-
     strcpy(buffer,value_enum_data);
     strcat(buffer, ",");
     strcat(buffer,int_number_data);
