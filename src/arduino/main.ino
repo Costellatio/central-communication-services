@@ -1,39 +1,23 @@
-#include <Wire.h>
-#include <Adafruit_Sensor.h>
-#include <Adafruit_BME280.h>
-#include <SensorSerialDataBuilder.h>
-
-#define SEALEVELPRESSURE_HPA        (1013.25)
-#define WEATHER_STATION_MEASUREMENT "weather station"
-#define TEMPERATURE_FIELD           "temperature"
+#include <WS_BME_280.h>
+#include <arduino-timer.h>
+#include <common.h>
 
 Adafruit_BME280 bme;
-
-/*
-bme.readTemperature()
-bme.readPressure() / 100.0F
-bme.readAltitude(SEALEVELPRESSURE_HPA)
-bme.readHumidity()
-*/
-
-String temperature_sensor_serial_data() {
-  return SensorSerialDataBuilder::build(WEATHER_STATION_MEASUREMENT, TEMPERATURE_FIELD, String(bme.readTemperature()));
-}
+Timer<> ws_timer = timer_create_default();
 
 void setup() {
-  Serial.begin(9600);
+    Serial.begin(9600);
+    while(!Serial);
 
-  if (!bme.begin(0x76)) {
-    Serial.println("No BME280 device found!");
-    while (1);
-  }
+    bool status = bme.begin(0x76);
+
+    if (!status) {
+        Serial.println("Could not find a valid BME280 sensor, check wiring, address, sensor ID!\n");
+        while (1) delay(10);
+    }
+  ws_timer.every(WS_TIME_PERIOD_SECONDS * 1000UL, print_weather_station_data, &bme);
 }
 
 void loop() {
-  String serial_data = "[" +
-    temperature_sensor_serial_data() +
-  "]";
-
-  Serial.println(serial_data);
-  delay(2000);
+  ws_timer.tick();
 }
