@@ -23,9 +23,9 @@
 
 #include "Arduino.h"
 
-#include <Adafruit_I2CDevice.h>
-#include <Adafruit_SPIDevice.h>
-#include <Adafruit_Sensor.h>
+#include <AdafruitI2CDevice.h>
+#include <AdafruitSPIDevice.h>
+#include <AdafruitSensor.h>
 
 /*!
  *  @brief  default I2C address

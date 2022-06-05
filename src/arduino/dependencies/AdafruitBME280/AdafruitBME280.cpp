@@ -28,7 +28,7 @@
  *
  */
 
-#include "Adafruit_BME280.h"
+#include "AdafruitBME280.h"
 #include "Arduino.h"
 
 /*!
