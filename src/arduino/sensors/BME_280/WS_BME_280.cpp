@@ -17,18 +17,16 @@ void assemble_data(char* buffer, Adafruit_BME280& bme)
   char *atm_pressure = send_data_double(WS_ATM_PRESSURE, bme.readPressure() / 100.0F);
   char *altitute = send_data_double(WS_ALTITUDE, bme.readAltitude(SEALEVELPRESSURE_HPA));
 
-  strcat(buffer, "#");
-  strcpy(buffer, temperature);
+  strcpy(buffer, "#");
+  strcat(buffer, temperature);
   strcat(buffer, "#");
   strcat(buffer, humidity);
   strcat(buffer, "#");
   strcat(buffer, atm_pressure);
   strcat(buffer, "#");
   strcat(buffer, altitute);
-  // if you want to add more sensors use strcat()
-  
   strcat(buffer, "#");
-
+  // if you want to add more sensors use strcat()
 
   delete[] temperature;
   delete[] humidity;
