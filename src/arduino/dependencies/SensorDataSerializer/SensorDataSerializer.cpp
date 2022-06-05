@@ -2,21 +2,21 @@
 #include <Arduino.h>
 
 #define MAX_SERIAL_DATA_SIZE 64
-#define MAX_PIN_DATA_SIZE 2
+#define MAX_ID_DATA_SIZE 2
 #define MAX_PROPERTY_DATA_SIZE 10
 
 #define INTEGER_BASE 10
 #define MIN_FLOAT_WIDTH 1
 #define FLOAT_PRECISION 2
 
-const char* SensorDataSerializer::serialize(int pin, int properties_size, ...) {
+const char* SensorDataSerializer::serialize(int id, int properties_size, ...) {
   va_list properties;
   va_start(properties, properties_size);
 
   char serial_data[MAX_SERIAL_DATA_SIZE];
 
   strcat(serial_data, "[");
-  strcat(serial_data, pin_data(pin));
+  strcat(serial_data, id_data(id));
   strcat(serial_data, ",");
 
   for (int i = 0; i < properties_size; i++) {
@@ -35,10 +35,10 @@ const char* SensorDataSerializer::serialize(int pin, int properties_size, ...) {
   return serial_data;
 }
 
-const char* SensorDataSerializer::pin_data(int pin) {
-  char pin_data[MAX_PIN_DATA_SIZE];
-  itoa(pin, pin_data, INTEGER_BASE);
-  return pin_data;
+const char* SensorDataSerializer::id_data(int id) {
+  char id_data[MAX_ID_DATA_SIZE];
+  itoa(id, id_data, INTEGER_BASE);
+  return id_data;
 }
 
 const char* SensorDataSerializer::property_data(float property) {

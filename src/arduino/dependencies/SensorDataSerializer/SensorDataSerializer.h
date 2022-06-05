@@ -3,7 +3,7 @@
 
 class SensorDataSerializer {
 private:
-  static const char* pin_data(int pin);
+  static const char* id_data(int id);
   static const char* property_data(float property);
 
 public:
