@@ -1,8 +1,10 @@
-from os              import getenv
-from serial          import Serial
-from dotenv          import load_dotenv
-from influxdb_client import InfluxDBClient, Point
-from logging         import INFO, info, warning, basicConfig
+from os                      import getenv
+from serial                  import Serial
+from dotenv                  import load_dotenv
+from influxdb_client         import InfluxDBClient, Point
+from logging                 import INFO, info, warning, basicConfig
+from json                    import loads
+from sensors.SensorIdMapping import SENSOR_ID_MAPPING
 
 basicConfig(level=INFO, format='[%(levelname)s][%(asctime)s] %(message)s')
 load_dotenv()
@@ -14,35 +16,6 @@ influx_token  = getenv('INFLUXDB_TOKEN')
 
 arduino_port = getenv('ARDUINO_PORT')
 arduino_rate = getenv('ARDUINO_RATE')
-
-def switch_get_filter(argument):
-  switcher = {
-    1: "weather station",
-    10: "temperature",
-    11: "humidity",
-    12: "atmospheric pressure",
-    13: "altitude",
-    14: "wind speed",
-    20: "rain sensor"
-  }
-  return switcher.get(argument, "INVALID ARGUMENT")
-
-def send_data(data):
-  data = data.split(",")
-  if len(data) != 2:
-    raise Exception("Expected 2 arguments from serial data, recieved: " + str(len(data)))
-
-  _measurement = int((data[0])[0])
-
-  if data[0] == "INVALID ARGUMENT":
-    raise Exception("Sensor ID is unknown!")
-  _field = int(data[0])
-  _data = float(data[1])
-
-  influx_point = Point(switch_get_filter(_measurement)).field(switch_get_filter(_field), _data)
-  influx_write.write(bucket=influx_bucket, org=influx_org, record=influx_point)
-
-  info('data written')
 
 try:
   influx_client = InfluxDBClient(url=influx_url, org=influx_org, token=influx_token)
@@ -63,20 +36,22 @@ def run():
 
   while True:
     try:
-      serial_data = serial_connection.readline().decode().strip()
-      serial_data = serial_data.replace(" ", "")
-      serial_data = serial_data.split("#")
+      serial_data = loads(serial_connection.readline().decode())
 
-      for data in serial_data:
-        if data:
-          send_data(data)
+      sensor_id = serial_data[0]
+      sensor_properties = serial_data[1:]
+
+      sensor = SENSOR_ID_MAPPING[sensor_id].process(sensor_properties)
+      for (name, value) in sensor['field_data']:
+        sensor_record = Point(sensor['measurement']).field(name, value)
+        influx_write.write(bucket=influx_bucket, org=influx_org, record=sensor_record)
 
     except KeyboardInterrupt:
       info('service shutting down')
       exit(0)
-    except Exception as e:
-      warning(e)
-      warning('broken data')
+
+    except Exception as error:
+      warning(error)
       continue
 
 run()
