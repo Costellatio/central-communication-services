@@ -6,7 +6,7 @@
 
 class BME280 : public Sensor {
 private:
-  Adafruit_BME280 bme;
+  AdafruitBME280 bme;
 
 public:
   BME280(Timer<>& timer);

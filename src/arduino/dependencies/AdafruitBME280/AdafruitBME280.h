@@ -1,5 +1,5 @@
 /*!
- * @file Adafruit_BME280.h
+ * @file AdafruitBME280.h
  *
  * Designed specifically to work with the Adafruit BME280 Breakout
  * ----> http://www.adafruit.com/products/2650
@@ -105,20 +105,20 @@ typedef struct {
 } bme280_calib_data;
 /*=========================================================================*/
 
-class Adafruit_BME280;
+class AdafruitBME280;
 
 /** Adafruit Unified Sensor interface for temperature component of BME280 */
 class Adafruit_BME280_Temp : public Adafruit_Sensor {
 public:
   /** @brief Create an Adafruit_Sensor compatible object for the temp sensor
       @param parent A pointer to the BME280 class */
-  Adafruit_BME280_Temp(Adafruit_BME280 *parent) { _theBME280 = parent; }
+  Adafruit_BME280_Temp(AdafruitBME280 *parent) { _theBME280 = parent; }
   bool getEvent(sensors_event_t *);
   void getSensor(sensor_t *);
 
 private:
   int _sensorID = 280;
-  Adafruit_BME280 *_theBME280 = NULL;
+  AdafruitBME280 *_theBME280 = NULL;
 };
 
 /** Adafruit Unified Sensor interface for pressure component of BME280 */
@@ -126,13 +126,13 @@ class Adafruit_BME280_Pressure : public Adafruit_Sensor {
 public:
   /** @brief Create an Adafruit_Sensor compatible object for the pressure sensor
       @param parent A pointer to the BME280 class */
-  Adafruit_BME280_Pressure(Adafruit_BME280 *parent) { _theBME280 = parent; }
+  Adafruit_BME280_Pressure(AdafruitBME280 *parent) { _theBME280 = parent; }
   bool getEvent(sensors_event_t *);
   void getSensor(sensor_t *);
 
 private:
   int _sensorID = 280;
-  Adafruit_BME280 *_theBME280 = NULL;
+  AdafruitBME280 *_theBME280 = NULL;
 };
 
 /** Adafruit Unified Sensor interface for humidity component of BME280 */
@@ -140,13 +140,13 @@ class Adafruit_BME280_Humidity : public Adafruit_Sensor {
 public:
   /** @brief Create an Adafruit_Sensor compatible object for the humidity sensor
       @param parent A pointer to the BME280 class */
-  Adafruit_BME280_Humidity(Adafruit_BME280 *parent) { _theBME280 = parent; }
+  Adafruit_BME280_Humidity(AdafruitBME280 *parent) { _theBME280 = parent; }
   bool getEvent(sensors_event_t *);
   void getSensor(sensor_t *);
 
 private:
   int _sensorID = 280;
-  Adafruit_BME280 *_theBME280 = NULL;
+  AdafruitBME280 *_theBME280 = NULL;
 };
 
 /**************************************************************************/
@@ -154,7 +154,7 @@ private:
     @brief  Class that stores state and functions for interacting with BME280 IC
 */
 /**************************************************************************/
-class Adafruit_BME280 {
+class AdafruitBME280 {
 public:
   /**************************************************************************/
   /*!
@@ -211,10 +211,10 @@ public:
   };
 
   // constructors
-  Adafruit_BME280();
-  Adafruit_BME280(int8_t cspin, SPIClass *theSPI = &SPI);
-  Adafruit_BME280(int8_t cspin, int8_t mosipin, int8_t misopin, int8_t sckpin);
-  ~Adafruit_BME280(void);
+  AdafruitBME280();
+  AdafruitBME280(int8_t cspin, SPIClass *theSPI = &SPI);
+  AdafruitBME280(int8_t cspin, int8_t mosipin, int8_t misopin, int8_t sckpin);
+  ~AdafruitBME280(void);
   bool begin(uint8_t addr = BME280_ADDRESS, TwoWire *theWire = &Wire);
   bool init();
 

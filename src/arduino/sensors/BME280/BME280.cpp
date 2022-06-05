@@ -9,7 +9,7 @@
 
 BME280::BME280(Timer<>& timer) : Sensor(timer) {
   bme.begin(BME280_PIN);
-  timer.every(TICK_INTERVAL, [](Adafruit_BME280& bme) -> bool {
+  timer.every(TICK_INTERVAL, [](AdafruitBME280& bme) -> bool {
     float temperature = bme.readTemperature();
     float humidity = bme.readHumidity();
     float pressure = bme.readPressure() / 100.0F;
