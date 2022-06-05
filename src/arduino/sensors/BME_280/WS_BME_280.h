@@ -1,5 +1,5 @@
 /**
- * @file WS_BME_280.cpp
+ * @file WS_BME_280.h
  *
  * @brief Header file for weather station sensor.
  */

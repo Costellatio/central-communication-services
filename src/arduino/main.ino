@@ -1,4 +1,5 @@
 #include <WS_BME_280.h>
+#include <WS_Rain_Sensor.h>
 #include <arduino-timer.h>
 #include <common.h>
 
@@ -6,6 +7,7 @@ Adafruit_BME280 bme;
 Timer<> ws_timer = timer_create_default();
 
 void setup() {
+    pinMode(WS_RAIN_SENSOR_1_PIN, INPUT);
     Serial.begin(9600);
     while(!Serial);
 
@@ -20,4 +22,5 @@ void setup() {
 
 void loop() {
   ws_timer.tick();
+  read_rain_sensor();
 }
