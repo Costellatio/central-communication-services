@@ -2,21 +2,20 @@ class Sensor:
   MEASUREMENT = None
   FIELDS = None
 
-  @staticmethod
-  def process(properties):
-    if __class__.__name__ == 'Sensor':
+  def process(self, properties):
+    if self.__class__.__name__ == 'Sensor':
       raise Exception('Undefined behaviour. Class interface method `process` called')
 
-    if __class__.MEASUREMENT == None:
+    if self.MEASUREMENT == None:
       raise Exception('Uninitialized measurement constant')
 
-    if __class__.FIELDS == None:
+    if self.FIELDS == None:
       raise Exception('Uninitialized fields constant')
 
-    if len(__class__.FIELDS) != len(properties):
+    if len(self.FIELDS) != len(properties):
       raise Exception('Mismatching properties and fields lengths')
 
     return {
-      'measurement': __class__.MEASUREMENT,
-      'field_data': __class__.FIELDS.zip(properties)
+      'measurement': self.MEASUREMENT,
+      'fields': list(zip(self.FIELDS, properties))
     }

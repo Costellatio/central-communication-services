@@ -32,7 +32,8 @@ except:
 
 def run():
   info('service listening for serial data')
-  serial_connection.flush()
+  serial_connection.reset_input_buffer()
+  serial_connection.reset_output_buffer()
 
   while True:
     try:
@@ -40,16 +41,17 @@ def run():
 
       sensor_id = serial_data[0]
       sensor_properties = serial_data[1:]
+      sensor_class = SENSOR_ID_MAPPING[sensor_id]
 
-      sensor = SENSOR_ID_MAPPING[sensor_id].process(sensor_properties)
-      for (name, value) in sensor['field_data']:
-        sensor_record = Point(sensor['measurement']).field(name, value)
+      sensor_data = sensor_class().process(sensor_properties)
+      for (name, value) in sensor_data['fields']:
+        sensor_record = Point(sensor_data['measurement']).field(name, value)
         influx_write.write(bucket=influx_bucket, org=influx_org, record=sensor_record)
 
+      info(f'[{sensor_class.__name__}] Measurement: {sensor_data["measurement"]}, Fields: {sensor_data["fields"]}')
     except KeyboardInterrupt:
       info('service shutting down')
       exit(0)
-
     except Exception as error:
       warning(error)
       continue

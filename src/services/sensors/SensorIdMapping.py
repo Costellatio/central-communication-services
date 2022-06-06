@@ -1,4 +1,4 @@
-from BME280 import BME280
+from .BME280 import BME280
 
 SENSOR_ID_MAPPING = {
   1: BME280,
