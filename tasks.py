@@ -16,8 +16,6 @@ ROOT_PATH = path.dirname(path.abspath(__file__))
 def initialize_project(context):
   context.run('docker-compose up -d')
   context.run('invoke update-arduino-library')
-  #context.run('docker cp ./grafana-dashboards/dashboards/. grafana:/etc/grafana/provisioning/dashboards')
-  #context.run('docker cp ./grafana-dashboards/datasource/. grafana:/etc/grafana/provisioning/datasource')
 
 @task
 def update_arduino_library(_):

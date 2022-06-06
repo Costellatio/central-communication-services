@@ -7,7 +7,7 @@ private:
   static const char* stringlify_property(float property);
 
 public:
-  static const char* serialize(int pin, int properties_size, ...);
+  static const char* serialize(int id, int properties_size, ...);
 };
 
 #endif

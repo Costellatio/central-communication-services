@@ -2,5 +2,6 @@
 #define SENSOR_TOGGLES_H
 
 #define BME280_ENABLED
+#define FC37_ENABLED
 
 #endif
