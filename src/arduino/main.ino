@@ -1,26 +1,32 @@
-#include <WS_BME_280.h>
-#include <WS_Rain_Sensor.h>
-#include <arduino-timer.h>
-#include <common.h>
+#include <SensorToggles.h>
+#include <Timer.h>
 
-Adafruit_BME280 bme;
-Timer<> ws_timer = timer_create_default();
+Timer<> timer;
+
+#ifdef BME280_ENABLED
+  #include <BME280.h>
+
+  BME280 bme280(timer);
+#endif
+
+#ifdef FC37_ENABLED
+  #include <FC37.h>
+
+  FC37 fc37(timer);
+#endif
 
 void setup() {
-    pinMode(WS_RAIN_SENSOR_1_PIN, INPUT);
-    Serial.begin(9600);
-    while(!Serial);
+  Serial.begin(9600);
 
-    bool status = bme.begin(0x76);
+  #ifdef BME280_ENABLED
+    bme280.run();
+  #endif
 
-    if (!status) {
-        Serial.println("Could not find a valid BME280 sensor, check wiring, address, sensor ID!\n");
-        while (1) delay(10);
-    }
-  ws_timer.every(WS_TIME_PERIOD_SECONDS * 1000UL, print_weather_station_data, &bme);
+  #ifdef FC37_ENABLED
+    fc37.run();
+  #endif
 }
 
 void loop() {
-  ws_timer.tick();
-  read_rain_sensor();
+  timer.tick();
 }
