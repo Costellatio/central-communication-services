@@ -36,4 +36,4 @@ def update_arduino_library(_):
 
 @task
 def run_influx_service(context):
-  context.run('python3 ' + ROOT_PATH + '/src/services/influx.py')
+  context.run('python3 ' + ROOT_PATH + '/src/services/Influx.py')
