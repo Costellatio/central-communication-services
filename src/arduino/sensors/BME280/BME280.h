@@ -10,6 +10,7 @@ private:
 
 public:
   BME280(Timer<>& timer);
+  void run();
 };
 
 #endif
