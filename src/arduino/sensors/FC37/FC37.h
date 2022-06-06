@@ -5,7 +5,7 @@
 
 class FC37 : public Sensor {
 public:
-  FC37(Timer<> timer);
+  FC37(Timer<>& timer);
   void run();
 };
 

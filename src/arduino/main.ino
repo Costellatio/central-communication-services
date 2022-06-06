@@ -1,6 +1,5 @@
 #include <SensorToggles.h>
 #include <Timer.h>
-#include <WS_Rain_Sensor.h>
 
 Timer<> timer;
 
