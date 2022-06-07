@@ -3,5 +3,6 @@
 
 #define BME280_ENABLED
 #define FC37_ENABLED
+#define ANEMOMETER_ENABLED
 
 #endif
