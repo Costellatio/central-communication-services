@@ -7,7 +7,7 @@
  *
  *  Driver for the BME280 humidity, temperature & pressure sensor
  *
- * These sensors use I2C or SPI to communicate, 2 or 4 pins are required
+ * These sensors use I2C to communicate, 2 or 4 pins are required
  * to interface.
  *
  * Designed specifically to work with the Adafruit BME280 Breakout
@@ -36,33 +36,7 @@
  */
 AdafruitBME280::AdafruitBME280() {}
 
-/*!
- *   @brief  class constructor if using hardware SPI
- *   @param  cspin the chip select pin to use
- *   @param  *theSPI
- *           optional SPI object
- */
-AdafruitBME280::AdafruitBME280(int8_t cspin, SPIClass *theSPI) {
-  spi_dev = new Adafruit_SPIDevice(cspin, 1000000, SPI_BITORDER_MSBFIRST,
-                                   SPI_MODE0, theSPI);
-}
-
-/*!
- *   @brief  class constructor if using software SPI
- *   @param cspin the chip select pin to use
- *   @param mosipin the MOSI pin to use
- *   @param misopin the MISO pin to use
- *   @param sckpin the SCK pin to use
- */
-AdafruitBME280::AdafruitBME280(int8_t cspin, int8_t mosipin, int8_t misopin,
-                                 int8_t sckpin) {
-  spi_dev = new Adafruit_SPIDevice(cspin, sckpin, misopin, mosipin);
-}
-
 AdafruitBME280::~AdafruitBME280(void) {
-  if (spi_dev) {
-    delete spi_dev;
-  }
   if (i2c_dev) {
     delete i2c_dev;
   }
@@ -84,18 +58,13 @@ AdafruitBME280::~AdafruitBME280(void) {
  *   @returns true on success, false otherwise
  */
 bool AdafruitBME280::begin(uint8_t addr, TwoWire *theWire) {
-  if (spi_dev == NULL) {
-    // I2C mode
-    if (i2c_dev)
-      delete i2c_dev;
-    i2c_dev = new Adafruit_I2CDevice(addr, theWire);
-    if (!i2c_dev->begin())
-      return false;
-  } else {
-    // SPI mode
-    if (!spi_dev->begin())
-      return false;
-  }
+  // I2C mode
+  if (i2c_dev)
+    delete i2c_dev;
+  i2c_dev = new Adafruit_I2CDevice(addr, theWire);
+  if (!i2c_dev->begin())
+    return false;
+
   return init();
 }
 
@@ -169,59 +138,45 @@ void AdafruitBME280::setSampling(sensor_mode mode,
 }
 
 /*!
- *   @brief  Writes an 8 bit value over I2C or SPI
+ *   @brief  Writes an 8 bit value over I2C
  *   @param reg the register address to write to
  *   @param value the value to write to the register
  */
 void AdafruitBME280::write8(byte reg, byte value) {
   byte buffer[2];
   buffer[1] = value;
-  if (i2c_dev) {
-    buffer[0] = reg;
-    i2c_dev->write(buffer, 2);
-  } else {
-    buffer[0] = reg & ~0x80;
-    spi_dev->write(buffer, 2);
-  }
+  buffer[0] = reg;
+  i2c_dev->write(buffer, 2);
 }
 
 /*!
- *   @brief  Reads an 8 bit value over I2C or SPI
+ *   @brief  Reads an 8 bit value over I2C
  *   @param reg the register address to read from
  *   @returns the data byte read from the device
  */
 uint8_t AdafruitBME280::read8(byte reg) {
   uint8_t buffer[1];
-  if (i2c_dev) {
-    buffer[0] = uint8_t(reg);
-    i2c_dev->write_then_read(buffer, 1, buffer, 1);
-  } else {
-    buffer[0] = uint8_t(reg | 0x80);
-    spi_dev->write_then_read(buffer, 1, buffer, 1);
-  }
+  buffer[0] = uint8_t(reg);
+  i2c_dev->write_then_read(buffer, 1, buffer, 1);
   return buffer[0];
 }
 
 /*!
- *   @brief  Reads a 16 bit value over I2C or SPI
+ *   @brief  Reads a 16 bit value over I2C
  *   @param reg the register address to read from
  *   @returns the 16 bit data value read from the device
  */
 uint16_t AdafruitBME280::read16(byte reg) {
   uint8_t buffer[2];
 
-  if (i2c_dev) {
-    buffer[0] = uint8_t(reg);
-    i2c_dev->write_then_read(buffer, 1, buffer, 2);
-  } else {
-    buffer[0] = uint8_t(reg | 0x80);
-    spi_dev->write_then_read(buffer, 1, buffer, 2);
-  }
+  buffer[0] = uint8_t(reg);
+  i2c_dev->write_then_read(buffer, 1, buffer, 2);
+
   return uint16_t(buffer[0]) << 8 | uint16_t(buffer[1]);
 }
 
 /*!
- *   @brief  Reads a signed 16 bit little endian value over I2C or SPI
+ *   @brief  Reads a signed 16 bit little endian value over I2C
  *   @param reg the register address to read from
  *   @returns the 16 bit data value read from the device
  */
@@ -231,14 +186,14 @@ uint16_t AdafruitBME280::read16_LE(byte reg) {
 }
 
 /*!
- *   @brief  Reads a signed 16 bit value over I2C or SPI
+ *   @brief  Reads a signed 16 bit value over I2C
  *   @param reg the register address to read from
  *   @returns the 16 bit data value read from the device
  */
 int16_t AdafruitBME280::readS16(byte reg) { return (int16_t)read16(reg); }
 
 /*!
- *   @brief  Reads a signed little endian 16 bit value over I2C or SPI
+ *   @brief  Reads a signed little endian 16 bit value over I2C
  *   @param reg the register address to read from
  *   @returns the 16 bit data value read from the device
  */
@@ -254,13 +209,8 @@ int16_t AdafruitBME280::readS16_LE(byte reg) {
 uint32_t AdafruitBME280::read24(byte reg) {
   uint8_t buffer[3];
 
-  if (i2c_dev) {
-    buffer[0] = uint8_t(reg);
-    i2c_dev->write_then_read(buffer, 1, buffer, 3);
-  } else {
-    buffer[0] = uint8_t(reg | 0x80);
-    spi_dev->write_then_read(buffer, 1, buffer, 3);
-  }
+  buffer[0] = uint8_t(reg);
+  i2c_dev->write_then_read(buffer, 1, buffer, 3);
 
   return uint32_t(buffer[0]) << 16 | uint32_t(buffer[1]) << 8 |
          uint32_t(buffer[2]);

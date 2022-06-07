@@ -4,7 +4,7 @@
  * Designed specifically to work with the Adafruit BME280 Breakout
  * ----> http://www.adafruit.com/products/2650
  *
- * These sensors use I2C or SPI to communicate, 2 or 4 pins are required
+ * These sensors use I2C to communicate, 2 or 4 pins are required
  * to interface.
  *
  * Adafruit invests time and resources providing this open source code,
@@ -24,7 +24,6 @@
 #include "Arduino.h"
 
 #include <AdafruitI2CDevice.h>
-#include <AdafruitSPIDevice.h>
 #include <AdafruitSensor.h>
 
 /*!
@@ -212,8 +211,6 @@ public:
 
   // constructors
   AdafruitBME280();
-  AdafruitBME280(int8_t cspin, SPIClass *theSPI = &SPI);
-  AdafruitBME280(int8_t cspin, int8_t mosipin, int8_t misopin, int8_t sckpin);
   ~AdafruitBME280(void);
   bool begin(uint8_t addr = BME280_ADDRESS, TwoWire *theWire = &Wire);
   bool init();
@@ -243,7 +240,6 @@ public:
 
 protected:
   Adafruit_I2CDevice *i2c_dev = NULL; ///< Pointer to I2C bus interface
-  Adafruit_SPIDevice *spi_dev = NULL; ///< Pointer to SPI bus interface
 
   Adafruit_BME280_Temp *temp_sensor = NULL;
   //!< Adafruit_Sensor compat temperature sensor component
