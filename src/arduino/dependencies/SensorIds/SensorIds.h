@@ -3,5 +3,6 @@
 
 #define BME280_ID 1
 #define FC37_ID 2
+#define ANEMOMETER_ID 3
 
 #endif

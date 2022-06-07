@@ -15,6 +15,12 @@ Timer<> timer;
   FC37 fc37(timer);
 #endif
 
+#ifdef ANEMOMETER_ENABLED
+  #include <Anemometer.h>
+
+  Anemometer anemometer(timer);
+#endif
+
 void setup() {
   Serial.begin(9600);
 
@@ -24,6 +30,10 @@ void setup() {
 
   #ifdef FC37_ENABLED
     fc37.run();
+  #endif
+
+  #ifdef ANEMOMETER_ENABLED
+    anemometer.run();
   #endif
 }
 
