@@ -1,5 +1,5 @@
-from .Sensor import Sensor
+from .InfluxSensor import InfluxSensor
 
-class FC37(Sensor):
+class FC37(InfluxSensor):
   MEASUREMENT = 'weather station'
   FIELDS = ['rain']
