@@ -4,5 +4,6 @@
 #define BME280_ENABLED
 #define FC37_ENABLED
 #define ANEMOMETER_ENABLED
+#define MPU6050_ENABLED
 
 #endif
