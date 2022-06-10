@@ -1,7 +1,7 @@
 #include "FC37.h"
 #include <SensorDataSerializer.h>
 #include <SensorIds.h>
-#include <SensorPins.h>
+#include <SensorInputs.h>
 
 #define TICK_INTERVAL 2 * 1000UL
 #define SERIALIZER_PROPERTIES 1
