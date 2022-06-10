@@ -3,35 +3,36 @@ from dotenv             import load_dotenv
 from os                 import path, getenv, listdir
 from distutils.dir_util import copy_tree, remove_tree
 
+from src.services.SerialProcessor import SerialProcessor
+
 load_dotenv()
 
-EXTERNAL_ARDUINO_LIBRARY_FOLDERS = [
+ROOT_PATH = path.dirname(path.abspath(__file__))
+LIB_FOLDERS = [
   'dependencies',
   'sensors',
 ]
 
-ROOT_PATH = path.dirname(path.abspath(__file__))
-
 @task
 def initialize_project(context):
   context.run('docker-compose up -d')
-  context.run('invoke update-arduino-library')
+  context.run('invoke install-dependencies')
 
 @task
-def update_arduino_library(_):
-  arduino_library_folder_path = getenv('ARDUINO_LIBRARY_FOLDER_PATH')
-  arduino_source_path         = ROOT_PATH + '/src/arduino'
+def start_serial_processor(_):
+  SerialProcessor.listen()
 
-  for folder in EXTERNAL_ARDUINO_LIBRARY_FOLDERS:
-    external_library_path = arduino_source_path + '/' + folder
+@task
+def install_dependencies(_):
+  arduino_lib_path = getenv('ARDUINO_LIB_PATH')
+  source_path = f'{ROOT_PATH}/src/arduino'
+
+  for folder in LIB_FOLDERS:
+    external_library_path = f'{source_path}/{folder}'
 
     for subfolder in listdir(external_library_path):
-      arduino_library_path  = arduino_library_folder_path + '/' + subfolder
+      arduino_library_path  = f'{arduino_lib_path}/{subfolder}'
       if path.exists(arduino_library_path):
         remove_tree(arduino_library_path)
 
-    copy_tree(external_library_path, arduino_library_folder_path)
-
-@task
-def run_influx_service(context):
-  context.run('python3 ' + ROOT_PATH + '/src/services/Influx.py')
+    copy_tree(external_library_path, arduino_lib_path)
