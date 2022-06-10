@@ -17,8 +17,8 @@
 
 ```
   # Set Enviroment Variables (Windows Powershell / Unix Shell)
-  # Configure the variables to match your system
   >>> cp .env.example .env
+  # Configure the uninitialized variables to match your system
 
   # Download Dependencies
   >>> pip install -r requirements.txt
@@ -27,14 +27,26 @@
   >>> invoke initialize-project
 ```
 
-### Development
+### Base Development Rules
+
 ```
   # When using new external python libraries
-  # Add them to requirements.txt
+  # !!! Add them to requirements.txt !!!
 
-  # To install newly added Arduino dependencies
-  >>> invoke update-arduino-library
+  # To update all dependencies when working
+  >>> invoke install-dependencies
 
-  # To start data collection/influx service
-  >>> invoke run-influx-service
+  # To start the serial communication service
+  >>> invoke start-serial-processor
+```
+
+### Sensor Development Concepts
+
+```
+  # Define a Sensor Id and Sensor Pin/I2C Address
+  # Implement the sensor logic in a timer task
+  # Serialize the output and print to Serial
+  # Wrap the sensor call in a toggle
+  # Create a sensor class handler for the serial services to handle
+  # Match the sensor class handler to the id in the klass mapper
 ```

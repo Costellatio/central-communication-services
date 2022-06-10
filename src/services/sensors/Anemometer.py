@@ -1,5 +1,5 @@
-from .Sensor import Sensor
+from .InfluxSensor import InfluxSensor
 
-class Anemometer(Sensor):
+class Anemometer(InfluxSensor):
   MEASUREMENT = 'weather station'
   FIELDS = ['wind speed']

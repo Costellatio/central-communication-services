@@ -1,5 +1,6 @@
 #include <SensorToggles.h>
 #include <Timer.h>
+#include <Wire.h>
 
 Timer<> timer;
 
@@ -21,8 +22,15 @@ Timer<> timer;
   Anemometer anemometer(timer);
 #endif
 
+#ifdef MPU6050_ENABLED
+  #include <MPU6050.h>
+
+  MPU6050 mpu6050(timer);
+#endif
+
 void setup() {
   Serial.begin(9600);
+  Wire.begin();
 
   #ifdef BME280_ENABLED
     bme280.run();
@@ -34,6 +42,10 @@ void setup() {
 
   #ifdef ANEMOMETER_ENABLED
     anemometer.run();
+  #endif
+
+  #ifdef MPU6050_ENABLED
+    mpu6050.run();
   #endif
 }
 
