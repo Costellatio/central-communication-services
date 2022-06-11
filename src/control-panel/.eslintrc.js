@@ -26,5 +26,11 @@ module.exports = {
     'linebreak-style': ['error', 'unix'],
     'quotes': ['error', 'single'],
     'semi': ['error', 'always'],
+    'comma-dangle': ['error', 'always-multiline'],
+  },
+  'settings': {
+    'react': {
+      'version': 'detect',
+    },
   },
 };
