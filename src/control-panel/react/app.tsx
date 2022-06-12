@@ -1,8 +1,13 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';
+
+import BoxCoverCanvas from './box-cover-canvas/box-cover-canvas';
 
 function App() {
-  return <>Hello World</>;
+  return (
+    <BoxCoverCanvas />
+  );
 }
 
-ReactDOM.render(<App />, document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
