@@ -20,7 +20,7 @@ def initialize_project(context):
 
 @task
 def start_serial_processor(_):
-  SerialProcessor.listen()
+  SerialProcessor().listen()
 
 @task
 def install_dependencies(_):
