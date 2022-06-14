@@ -8,9 +8,10 @@ from src.services.SerialProcessor import SerialProcessor
 load_dotenv()
 
 ROOT_PATH = path.dirname(path.abspath(__file__))
-LIB_FOLDERS = [
-  'dependencies',
-  'sensors',
+ARDUINO_SOURCE_PATH = f'{ROOT_PATH}/src/arduino'
+ARDUINO_LIB_FOLDERS = [
+  f'{ARDUINO_SOURCE_PATH}/dependencies',
+  f'{ARDUINO_SOURCE_PATH}/sensors',
 ]
 
 @task
@@ -20,19 +21,16 @@ def initialize_project(context):
 
 @task
 def start_serial_processor(_):
-  SerialProcessor.listen()
+  SerialProcessor().listen()
 
 @task
 def install_dependencies(_):
   arduino_lib_path = getenv('ARDUINO_LIB_PATH')
-  source_path = f'{ROOT_PATH}/src/arduino'
 
-  for folder in LIB_FOLDERS:
-    external_library_path = f'{source_path}/{folder}'
-
-    for subfolder in listdir(external_library_path):
+  for folder in ARDUINO_LIB_FOLDERS:
+    for subfolder in listdir(folder):
       arduino_library_path  = f'{arduino_lib_path}/{subfolder}'
       if path.exists(arduino_library_path):
         remove_tree(arduino_library_path)
 
-    copy_tree(external_library_path, arduino_lib_path)
+    copy_tree(folder, arduino_lib_path)
