@@ -1,6 +1,4 @@
-from .Sensor import Sensor
+from .ControlPanelSensor import ControlPanelSensor
 
-class MPU6050(Sensor):
-  def process(self, properties):
-    # Pass to visualization
-    return 0
+class MPU6050(ControlPanelSensor):
+  pass
