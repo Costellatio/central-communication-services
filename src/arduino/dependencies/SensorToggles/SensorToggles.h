@@ -5,5 +5,7 @@
 #define FC37_ENABLED
 #define ANEMOMETER_ENABLED
 #define MPU6050_ENABLED
+#define MLX90614_ENABLED
+#define BH1750_ENABLED
 
 #endif

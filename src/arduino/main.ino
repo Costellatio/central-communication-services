@@ -28,6 +28,18 @@ Timer<> timer;
   MPU6050 mpu6050(timer);
 #endif
 
+#ifdef MLX90614_ENABLED
+  #include <Adafruit_MLX90614.h>
+
+  MLX90614 mlx90614(timer);
+#endif
+
+#ifdef BH1750_ENABLED
+  #include <BH1750.h>
+
+  BH1750 bh1750(timer);
+#endif
+
 void setup() {
   Serial.begin(9600);
   Wire.begin();
@@ -46,6 +58,14 @@ void setup() {
 
   #ifdef MPU6050_ENABLED
     mpu6050.run();
+  #endif
+
+  #ifdef MLX90614_ENABLED
+    mlx90614.run();
+  #endif
+
+  #ifdef BH1750_ENABLED
+    bh1750.run();
   #endif
 }
 
