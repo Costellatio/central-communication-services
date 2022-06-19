@@ -7,11 +7,12 @@ class SerialPort(Serial):
   def __init__(self, port, rate):
     try:
       super(SerialPort, self).__init__(port, rate)
-
-      self.reset_input_buffer()
-      self.reset_output_buffer()
     except:
       Logger.warning(f'Serial Port {port} is busy or inactive')
+      exit(1)
 
-  def read(self):
+    self.reset_input_buffer()
+    self.reset_output_buffer()
+
+  def read_data(self):
     return loads(self.readline().decode())

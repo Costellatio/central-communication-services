@@ -21,6 +21,6 @@ class Logger:
     Logger._logger.info(message)
 
   @staticmethod
-  def warning(klass, message):
+  def warning(message):
     Logger.init()
     Logger._logger.info(message)

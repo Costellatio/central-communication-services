@@ -23,3 +23,4 @@ class InfluxProcessor(InfluxDBClient):
         )
     else:
       Logger.warning('Influx client is inactive')
+      exit(1)
