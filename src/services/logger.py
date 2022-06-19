@@ -1,26 +1,26 @@
 from logging import INFO, getLogger, basicConfig
 
 class Logger:
-  LOGGER = None
+  _logger = None
 
   @staticmethod
-  def init_logger():
-    if Logger.LOGGER != None:
-      return Logger.LOGGER
+  def init():
+    if Logger._logger != None:
+      return Logger._logger
 
     format = '[%(levelname)s][%(asctime)s] %(message)s'
     date_format = '%Y-%m-%d %H:%M:%S'
 
-    Logger.LOGGER = getLogger('Logger')
+    Logger._logger = getLogger('Logger')
     basicConfig(level=INFO, format=format, datefmt=date_format)
-    Logger.LOGGER.setLevel(INFO)
+    Logger._logger.setLevel(INFO)
 
   @staticmethod
   def info(message):
-    Logger.init_logger()
-    Logger.LOGGER.info(message)
+    Logger.init()
+    Logger._logger.info(message)
 
   @staticmethod
   def warning(message):
-    Logger.init_logger()
-    Logger.LOGGER.info(message)
+    Logger.init()
+    Logger._logger.info(message)

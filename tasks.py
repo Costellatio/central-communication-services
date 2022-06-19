@@ -3,8 +3,6 @@ from dotenv             import load_dotenv
 from os                 import path, getenv, listdir
 from distutils.dir_util import copy_tree, remove_tree
 
-from src.services.SerialProcessor import SerialProcessor
-
 load_dotenv()
 
 ROOT_PATH = path.dirname(path.abspath(__file__))
@@ -15,16 +13,16 @@ ARDUINO_LIB_FOLDERS = [
 ]
 
 @task
-def initialize_project(context):
+def init(context):
   context.run('docker-compose up -d')
   context.run('invoke install-dependencies')
 
 @task
-def start_serial_processor(_):
-  SerialProcessor().listen()
+def start(context):
+  context.run('python3 src/services/main.py')
 
 @task
-def install_dependencies(_):
+def install(_):
   arduino_lib_path = getenv('ARDUINO_LIB_PATH')
 
   for folder in ARDUINO_LIB_FOLDERS:
