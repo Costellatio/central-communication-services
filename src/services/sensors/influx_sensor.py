@@ -1,20 +1,20 @@
-from .Sensor import Sensor
+from .sensor import Sensor
 
 class InfluxSensor(Sensor):
-  MEASUREMENT = None
-  FIELDS = None
+  _measurement = None
+  _fields = None
 
   def process(self, properties):
-    if self.MEASUREMENT == None:
+    if self._measurement == None:
       raise Exception('Uninitialized measurement constant')
 
-    if self.FIELDS == None:
+    if self._fields == None:
       raise Exception('Uninitialized fields constant')
 
-    if len(self.FIELDS) != len(properties):
+    if len(self._fields) != len(properties):
       raise Exception('Mismatching properties and fields lengths')
 
     return {
-      'measurement': self.MEASUREMENT,
-      'fields': list(zip(self.FIELDS, properties))
+      'measurement': self._measurement,
+      'fields': list(zip(self._fields, properties))
     }
