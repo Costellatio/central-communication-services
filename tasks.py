@@ -30,8 +30,8 @@ def install(_):
 
 @task
 def start_ws(context):
-  context.run('python3 -m src.services.weather_station.app')
+  context.run('python3 -m services.weather_station.app')
 
 @task
 def start_cp(context):
-  context.run('python3 -m src.services.control_panel.app')
+  context.run('python3 -m services.control_panel.app')

@@ -1,9 +1,0 @@
-#ifndef SENSOR_PINS_H
-#define SENSOR_PINS_H
-
-#define BME280_I2C_ADDRESS 0x76
-#define FC37_PIN A0
-#define ANEMOMETER_PIN A1
-#define MPU6050_I2C_ADDRESS 0x68
-
-#endif
