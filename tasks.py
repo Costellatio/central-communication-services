@@ -1,29 +1,20 @@
 from invoke             import task
-from dotenv             import load_dotenv
 from os                 import path, getenv, listdir
+from dotenv             import load_dotenv
 from distutils.dir_util import copy_tree, remove_tree
-
-from src.services.SerialProcessor import SerialProcessor
 
 load_dotenv()
 
 ROOT_PATH = path.dirname(path.abspath(__file__))
-LIB_FOLDERS = [
-  'dependencies',
-  'sensors',
-]
+LIB_FOLDERS = ['dependencies', 'sensors']
 
 @task
-def initialize_project(context):
+def init(context):
   context.run('docker-compose up -d')
-  context.run('invoke install-dependencies')
+  context.run('invoke install')
 
 @task
-def start_serial_processor(_):
-  SerialProcessor.listen()
-
-@task
-def install_dependencies(_):
+def install(_):
   arduino_lib_path = getenv('ARDUINO_LIB_PATH')
   source_path = f'{ROOT_PATH}/src/arduino'
 
@@ -36,3 +27,11 @@ def install_dependencies(_):
         remove_tree(arduino_library_path)
 
     copy_tree(external_library_path, arduino_lib_path)
+
+@task
+def start_ws(context):
+  context.run('python3 -m src.services.weather_station.app')
+
+@task
+def start_cp(context):
+  context.run('python3 -m src.services.control_panel.app')
