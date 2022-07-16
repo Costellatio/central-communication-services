@@ -1,4 +1,0 @@
-influxdb-client==1.27.0
-invoke==1.7.0
-pyserial==3.5
-python-dotenv==0.20.0
