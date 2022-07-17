@@ -1,34 +1,37 @@
-// import express from 'express';
-// import socketio from 'socket.io';
-// import http from 'http';
-
-// const app = express();
-// const server = http.createServer(app);
-// const socket = new socketio.Server(server);
-
-// server.listen(3030, () => {
-//   console.log('App listenings on port 3030');
-// });
-
 import dotenv from 'dotenv';
 
-import { ArduinoSerial, Sensor } from './services/arduino-station-com';
-import { InfluxClient } from './services/influx-com';
+import { ArduinoSerial, ArduinoSerialError, Sensor } from './services/arduino-station-com';
+import { InfluxClient, InfluxClientError } from './services/influx-com';
+import { PanelClient, PanelClientError } from './services/panel-com';
+import { logError, logInfo } from './utils/logger';
 
 dotenv.config();
 
 const arduinoSerial = new ArduinoSerial();
-const influxClient = new InfluxClient();
+const influxClient  = new InfluxClient();
+const panelClient   = new PanelClient();
 
 arduinoSerial.open((data) => {
-  const [sensorId, ...sensorProperties] = JSON.parse(data);
-  const sensor = new Sensor(sensorId, sensorProperties);
+  try {
+    const [sensorId, ...sensorProperties] = JSON.parse(data);
+    const sensor = new Sensor(sensorId, sensorProperties);
 
-  if (sensor.influxProps) {
-    influxClient.write(sensor);
+    if (sensor.influxProps) {
+      influxClient.write(sensor);
+    }
+
+    panelClient.emit(sensor.name, sensor.props);
+
+    logInfo('Main', JSON.stringify(sensor.props));
+  } catch (error: any) {
+    if (
+      error instanceof ArduinoSerialError ||
+      error instanceof InfluxClientError  ||
+      error instanceof PanelClientError
+    ) {
+      logError(error.name, error.message);
+    } else {
+      logError('UnknownError', error.message);
+    }
   }
-
-  // controlPanel.emit(sensor.name, sensor.props)
-
-  console.log(data);
 });
