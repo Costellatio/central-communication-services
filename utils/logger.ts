@@ -1,38 +1,28 @@
 import { createLogger, transports, format } from 'winston';
 
-const logger = createLogger({
+const loggerFormat = format.printf(({ level, message, label, timestamp }) => {
+  return `[${level.toUpperCase()}][${label}][${timestamp}]: ${message}`;
+});
+
+const getLogger = (label: string) => createLogger({
   level: 'info',
   transports: [
     new transports.Console(),
+    new transports.File({ filename: 'logs/prod.log' }),
   ],
-});
-
-const loggerFormat = format.printf(({ level, message, label, timestamp }) => {
-  return `${timestamp} [${label}] ${level}: ${message}`;
+  format: format.combine(
+    format.label({ label }),
+    format.timestamp({ format: 'MMM-DD-YYYY HH:mm:ss' }),
+    loggerFormat,
+  ),
 });
 
 function logInfo(label: string, message: string) {
-  logger.configure({
-    format: format.combine(
-      format.label({ label }),
-      format.timestamp(),
-      loggerFormat,
-    ),
-  });
-
-  logger.log('info', message);
+  getLogger(label).log('info', message);
 }
 
 function logError(label: string, message: string) {
-  logger.configure({
-    format: format.combine(
-      format.label({ label }),
-      format.timestamp(),
-      loggerFormat,
-    ),
-  });
-
-  logger.log('error', message);
+  getLogger(label).log('error', message);
 }
 
 export {

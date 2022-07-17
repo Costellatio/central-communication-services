@@ -12,14 +12,23 @@
 
 import dotenv from 'dotenv';
 
-import { ArduinoSerial } from 'services/arduino-station-com';
+import { ArduinoSerial, Sensor } from './services/arduino-station-com';
+import { InfluxClient } from './services/influx-com';
 
 dotenv.config();
 
 const arduinoSerial = new ArduinoSerial();
+const influxClient = new InfluxClient();
 
-arduinoSerial.open();
+arduinoSerial.open((data) => {
+  const [sensorId, ...sensorProperties] = JSON.parse(data);
+  const sensor = new Sensor(sensorId, sensorProperties);
 
-arduinoSerial.on('data', (data) => {
+  if (sensor.influxProps) {
+    influxClient.write(sensor);
+  }
+
+  // controlPanel.emit(sensor.name, sensor.props)
+
   console.log(data);
 });

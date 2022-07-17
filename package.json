@@ -8,6 +8,7 @@
   "author": "Stoyan Grozdanov <stoyan.konstantinov.grozdanov@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "@influxdata/influxdb-client": "^1.27.0",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
     "serialport": "^10.4.0",
@@ -26,8 +27,7 @@
   },
   "nodemonConfig": {
     "watch": [
-      "index.ts",
-      "services"
+      "./**"
     ],
     "ext": "ts",
     "execMap": {
@@ -83,7 +83,8 @@
           "before": false,
           "after": true
         }
-      ]
+      ],
+      "@typescript-eslint/no-explicit-any": "off"
     }
   }
 }
